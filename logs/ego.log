@@ -1,0 +1,9 @@
+2025-05-27 12:54:43 [main] INFO  c.e.g.l.b.BackendApplicationTests - Starting BackendApplicationTests using Java 18.0.2 with PID 64792 (started by Lenovo in E:\SoftWareForPrograming\idea\codes\e_commerce_sys\backend)
+2025-05-27 12:54:43 [main] INFO  c.e.g.l.b.BackendApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2025-05-27 12:54:45 [main] INFO  c.e.g.lpj.backend.config.WebConfig - 映射外部资源路径: E:\SoftWareForPrograming\idea\codes\e_commerce_sys\backend\img\
+2025-05-27 12:54:45 [main] INFO  c.e.g.l.b.BackendApplicationTests - Started BackendApplicationTests in 2.856 seconds (process running for 4.625)
+2025-05-27 12:54:47 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-05-27 12:54:50 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@62794582
+2025-05-27 12:54:50 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-05-27 12:54:50 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-05-27 12:54:50 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

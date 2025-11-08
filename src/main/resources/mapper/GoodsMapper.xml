@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.glut.lpj.backend.Mapper.GoodsMapper">
+    <select id="selectGoodsById" resultType="map">
+        SELECT
+            g.goods_id AS id,
+            g.name,
+            gm.price,
+            s.brand AS shop,
+            gm.pic_path AS image,
+            c.sort AS sort,
+            i.quantity
+        FROM goods g
+                 JOIN goodsMesg gm ON g.goods_id = gm.goods_id
+                 JOIN stores s ON gm.store_id = s.store_id
+                 JOIN inventory i ON i.goods_id = g.goods_id AND i.store_id = s.store_id
+                 JOIN categories c ON gm.sort_id = c.sort_id
+        WHERE g.goods_id = #{id}
+    </select>
+    <!-- 根据店铺ID查询商品列表 -->
+    <select id="selectGoodsByShop" resultType="java.util.HashMap">
+        SELECT
+            g.goods_id AS id,
+            g.name AS name,
+            gm.price AS price,
+            s.brand AS shop,
+            gm.pic_path AS image,
+            c.sort AS sort,
+            i.quantity AS quantity
+        FROM goods g
+                 INNER JOIN goodsMesg gm ON g.goods_id = gm.goods_id
+                 INNER JOIN stores s ON gm.store_id = s.store_id
+                 INNER JOIN inventory i ON i.goods_id = g.goods_id AND i.store_id = s.store_id
+                 INNER JOIN categories c ON gm.sort_id = c.sort_id
+        WHERE s.store_id = #{shopId}
+    </select>
+    <!-- 2. 插入goods表 -->
+    <insert id="insertGoods">
+        INSERT INTO goods (goods_id, name) VALUES (#{id}, #{name})
+    </insert>
+
+    <!-- 3. 插入goodsMesg表 -->
+    <insert id="insertGoodsMesg">
+        INSERT INTO goodsMesg (goods_id, store_id, pic_path, sort_id, price)
+        VALUES (#{goodsId}, #{storeId}, #{picPath}, #{sortId}, #{price})
+    </insert>
+
+    <!-- 4. 插入inventory表 -->
+    <insert id="insertInventory">
+        INSERT INTO inventory (store_id, goods_id, quantity)
+        VALUES (#{storeId}, #{goodsId}, #{quantity})
+    </insert>
+    <!-- 根据分类ID查询商品 -->
+    <select id="selectGoodsBySort" resultType="java.util.HashMap">
+        SELECT
+            g.goods_id AS id,
+            g.name AS name,
+            gm.price AS price,
+            s.brand AS shop,
+            gm.pic_path AS image,
+            c.sort AS sort,
+            i.quantity AS quantity
+        FROM goods g
+                 INNER JOIN goodsMesg gm ON g.goods_id = gm.goods_id
+                 INNER JOIN stores s ON gm.store_id = s.store_id
+                 INNER JOIN inventory i ON i.goods_id = g.goods_id AND i.store_id = s.store_id
+                 INNER JOIN categories c ON gm.sort_id = c.sort_id
+        WHERE c.sort_id = #{sortId}
+    </select>
+
+    <!-- 查询所有商品 -->
+    <select id="selectAllGoods" resultType="java.util.HashMap">
+        SELECT
+            g.goods_id AS id,
+            g.name AS name,
+            gm.price AS price,
+            s.brand AS shop,
+            gm.pic_path AS image,
+            c.sort AS sort,
+            i.quantity AS quantity
+        FROM goods g
+                 INNER JOIN goodsMesg gm ON g.goods_id = gm.goods_id
+                 INNER JOIN stores s ON gm.store_id = s.store_id
+                 INNER JOIN inventory i ON i.goods_id = g.goods_id AND i.store_id = s.store_id
+                 INNER JOIN categories c ON gm.sort_id = c.sort_id
+    </select>
+    <!-- 更新goods表基础信息 -->
+    <update id="updateGoodsBase">
+        UPDATE goods
+        SET name = #{name}
+        WHERE goods_id = #{id}
+    </update>
+
+    <!-- 更新goodsMesg表（动态处理pic_path更新） -->
+    <update id="updateGoodsDetail">
+        UPDATE goodsMesg
+        SET
+        store_id = #{storeId},
+        sort_id = #{sortId},
+        price = #{price}
+        <if test="picPath != null">
+            ,pic_path = #{picPath}
+        </if>
+        WHERE goods_id = #{goodsId}
+    </update>
+
+    <!-- 更新inventory表库存 -->
+    <update id="updateInventory">
+        UPDATE inventory
+        SET quantity = #{quantity}
+        WHERE store_id = #{storeId} AND goods_id = #{goodsId}
+    </update>
+    <select id="selectGoodsByListGoodsId" resultType="java.util.HashMap">
+        select goods.goods_id as id,
+               goods.name as name,
+               goodsMesg.pic_path as image,
+               goodsMesg.price as price,
+               stores.brand as brand,
+               goodsMesg.description
+                from stores,goods,goodsMesg
+                where goods.goods_id = goodsMesg.goods_id
+                  and stores.store_id =goodsMesg.store_id
+                  and goods.goods_id
+                    <if test="goods_ids != null and !goods_ids.isEmpty()">
+                        in
+                            <foreach collection="goods_ids" item="id" open="(" separator="," close=")">
+                                #{id}
+                            </foreach>
+                    </if>
+    </select>
+</mapper>

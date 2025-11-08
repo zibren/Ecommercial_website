@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.glut.lpj.backend.Mapper.OrderMapper">
+    <!-- 分页查询 -->
+    <select id="selectByUserIdWithPagination" resultType="map">
+        SELECT * FROM `orders`
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC  <!-- 建议始终指定排序 -->
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 总数查询 -->
+    <select id="selectCountByUserId" resultType="int">
+        SELECT COUNT(*) FROM `orders`
+        WHERE user_id = #{userId}
+    </select>
+    <insert id="insertOrder">
+        INSERT INTO `orders`
+            (order_id, user_id, create_time, phone, receiver_phone, address, total)
+        VALUES
+            (#{orderId}, #{userId}, #{createTime}, #{phone}, #{receiver}, #{address}, #{total})
+    </insert>
+
+    <select id="selectByUserId" resultType="map">
+        SELECT * FROM `orders` WHERE user_id = #{userId}
+    </select>
+
+    <select id="getMaxOrderIdSuffix" resultType="java.lang.Integer">
+        SELECT MAX(CAST(SUBSTRING(order_id, 2) AS UNSIGNED))
+        FROM `orders`
+        WHERE order_id LIKE '1%'
+    </select>
+</mapper>

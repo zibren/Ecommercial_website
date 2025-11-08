@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.glut.lpj.backend.Mapper.ShopCarMapper">
+
+    <!-- 基础字段映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.glut.lpj.backend.pojo.ShopCar">
+        <result column="user_id" property="user_id" />
+        <result column="car_id" property="car_id" />
+        <result column="goods_id" property="goods_id" />
+        <result column="count" property="count" />
+    </resultMap>
+
+    <!-- 查询购物车商品 -->
+    <select id="selectByUserIdAndCarId" resultMap="BaseResultMap">
+        SELECT * FROM shop_car
+        WHERE user_id = #{user_id} AND car_id = #{car_id}
+    </select>
+
+    <!-- 批量插入 -->
+    <insert id="batchInsert">
+        INSERT INTO shop_car (user_id, car_id, goods_id, count)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.user_id}, #{item.car_id}, #{item.goods_id}, #{item.count})
+        </foreach>
+    </insert>
+
+    <!-- 更新商品数量 -->
+    <update id="updateCount">
+        UPDATE shop_car SET count = #{count}
+        WHERE user_id = #{user_id}
+          AND car_id = #{car_id}
+          AND goods_id = #{goods_id}
+    </update>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM shop_car
+        WHERE user_id = #{user_id}
+        AND car_id = #{car_id}
+        AND goods_id IN
+        <foreach collection="goods_ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectCarIdByUserId" resultType="java.lang.String">
+        SELECT car_id FROM shop_car
+        WHERE user_id = #{user_id}
+        LIMIT 1
+    </select>
+</mapper>
